@@ -140,10 +140,11 @@
                         //"<div class='customer-name'>#: ContactName #</div>",
                         field: "StartTime",
                         title: "Start Time",
-                        width: 240
+                        template: '#= kendo.toString(kendo.parseDate(StartTime), "dd/MM/yyyy HH:mm:ss")#'
                     }, {
                         field: "EndTime",
-                        title: "End Time"
+                        title: "End Time",
+                        template: '#= kendo.toString(kendo.parseDate(EndTime), "dd/MM/yyyy HH:mm:ss")#'
                     }, {
                         field: "RoomVM.BuildingName",
                         title: "Building Name"
@@ -174,8 +175,8 @@
                      },
                      {
                          field: "IsBooked",
-                         title: "Availablity"
-                         //width: 150
+                         title: "Availablity",
+                         //template: "#if(ErrorDesc==null){# #: DeviceLabel # #}else If(ErrorDesc==""){# #: DeviceLabel # #}else{# #: DeviceText # #}#"
                      }
                     ]
                 });
