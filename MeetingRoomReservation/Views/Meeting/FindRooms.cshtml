@@ -1,0 +1,236 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Find Rooms</title>
+    <style>
+        .bg-1 {
+            background-color: #1abc9c; /* Green */
+            color: #ffffff;
+        }
+        .bg-2 {
+            background-color: #474e5d; /* blue */
+            /*color: #ffffff;*/
+        }
+    </style>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+    <style>
+        html {
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.mobile.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/kendo.all.min.js"></script>
+</head>
+@*<body class="bg-2">*@
+<body>
+    <h1 class=" text-center">Find & Book Meeting Halls <small>Powered By Maniraj</small></h1>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <h3 class="col-md-10 text-justify">Search By</h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-2"><input type="text" id="empid" class="form-control" placeholder="Employee Id"></div>
+            <div class="col-md-2"><input type="text" id="empname" class="form-control" placeholder="Name"></div>
+            <div class="col-md-2">
+                <select id="buildingname" class="form-control">
+                    <option value="">-- Location -- </option>
+                    <option value="1">Building 1</option>
+                    <option value="2">Building 2</option>
+                    <option value="3">Building 3</option>
+                </select>
+
+            </div>
+            <div class="col-md-2"><input type="text" id="roomname" class="form-control" placeholder="Room"></div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-2"><input type="time" id="fromtime" class="form-control" placeholder="From Time"></div>
+            <div class="col-md-2"><input type="time" id="totime" class="form-control" placeholder="To Time"></div>
+            <div class="col-md-2"><input type="number" id="numberofattendees" max="30" class="form-control" placeholder="Numer of Attendees"></div>
+            <div class="col-md-2"><input type="button" id="btn-search" class="form-control" value="Search"></div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+    <div class="container">
+        @*<table id="meetingtable" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Location</th>
+                    <th>Room Name</th>
+                    <th>Room Capacity</th>
+                </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+        </table><div class="row"></div>*@
+    </div>
+    @*<div class="row">
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+            <div class="col-md-1">.col-md-1</div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">.col-md-8</div>
+            <div class="col-md-4">.col-md-4</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-4">.col-md-4</div>
+            <div class="col-md-4">.col-md-4</div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">.col-md-6</div>
+            <div class="col-md-6">.col-md-6</div>
+        </div>*@
+    <div id="example">
+        <div id="grid"></div>
+        <script>
+            $(document).ready(function () {
+                $("#grid").kendoGrid({
+                    dataSource: {                        
+                        transport: {
+                            read: "http://localhost:1249/api/MeetingPlanning/GetMeetingRooms",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            type: "POST"
+                        },
+                        pageSize: 20
+                    },
+                    height: 550,
+                    groupable: true,
+                    sortable: true,
+                    pageable: {
+                        refresh: true,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    columns: [{
+                        //template: "<div class='customer-photo'" +
+                        //"style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
+                        //"<div class='customer-name'>#: ContactName #</div>",
+                        field: "StartTime",
+                        title: "Start Time",
+                        width: 240
+                    }, {
+                        field: "EndTime",
+                        title: "End Time"
+                    }, {
+                        field: "RoomVM.BuildingName",
+                        title: "Building Name"
+                    },
+                    {
+                        field: "RoomVM.RoomCapacity",
+                        title: "Room Capacity"
+                    },
+                    {
+                        field: "RoomVM.RoomName",
+                        title: "Room Name"
+                        //width: 150
+                    },
+                     {
+                         field: "EmployeeId",
+                         title: "EmployeeId"
+                         //width: 150
+                     },
+                     {
+                         field: "EmployeeName",
+                         title: "Employee Name"
+                         //width: 150
+                     },
+                     {
+                         field: "NumberOfAttendees",
+                         title: "NumberOfAttendees"
+                         //width: 150
+                     },
+                     {
+                         field: "IsBooked",
+                         title: "Availablity"
+                         //width: 150
+                     }
+                    ]
+                });
+            });
+        </script>
+    </div>
+
+    <style type="text/css">
+        .customer-photo {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-size: 32px 35px;
+            background-position: center center;
+            vertical-align: middle;
+            line-height: 32px;
+            box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+            margin-left: 5px;
+        }
+
+        .customer-name {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 32px;
+            padding-left: 3px;
+        }
+    </style>
+    
+    <script>
+        $(document).ready(function () {
+            $("#btn-search").click(function () {
+                var data = {
+                    EmployeeId: $("#empid").val(),
+                    RoomName: $("#roomname").val()
+                }
+                var searchVM = JSON.stringify(data);
+                $.ajax({
+                    type: "POST",
+                    @*//url: '@Url.Action( "GetMeetingRooms","MeeetingPlanning","api")',*@
+                    //url: 'http://localhost:1249/api/MeetingPlanning/GetMeetingRooms?searchVM=' + data,
+                    url: 'http://localhost:1249/api/MeetingPlanning/GetMeetingRooms',
+                    data: data,
+                    //url: '/Controller/Search',
+                    //data: { queryString: searchVal },
+                    success: function (data) {
+                        debugger;
+                        $("#grid").data("kendoGrid").dataSource.data(data);
+                        //$.each(data, function (key, value) {
+                        //    $('#meetingtable').append('<tr><td>' + value.StartTime + '</td><td>' + value.EndTime + '</td><td>' + value.RoomVM.BuildingName + '</td><td>' + value.RoomVM.RoomName + '</td><td>' + value.RoomVM.RoomCapacity + '</td></tr>');
+                        //});
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
